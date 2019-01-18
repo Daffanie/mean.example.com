@@ -19,7 +19,20 @@ var Users = new Schema({
   admin: {
     type: Boolean,
     default: false
+  },   //Create and modified dates
+  created: {
+    type: Date,
+    default: Date.now
+  },
+  modified: {
+    type: Date,
+    default: Date.now
   }
+});
+
+  Users.pre('save', function(next){
+    this.modified = new Date().toISOString();
+    next();
 });
 
 //Add unique validation properties to the model

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+   //Request that returns all user record
 var Users = require('../../models/users');
 
 router.get('/', function(req, res, next) {
@@ -19,8 +20,10 @@ router.get('/', function(req, res, next) {
 router.get('/', function(req, res, next) {
   res.json({success: true});
 });
-
+  //
 router.get('/:userId', function(req,res){
+
+  //Request that returns one user record
 
   var userId = req.params.userId;
    Users.findOne({'_id':userId}, function(err, user){
@@ -32,6 +35,7 @@ router.get('/:userId', function(req,res){
 
  });
 
+    //Post
  router.post('/', function(req, res) {
   Users.create(new Users({
     username: req.body.username,
@@ -50,15 +54,14 @@ router.get('/:userId', function(req,res){
 
 });
 
+  //PUT
 router.put('/', function(req, res){
 
   Users.findOne({'_id': req.body._id}, function(err, user){
 
    if(err) {
      return res.json({success: false, error: err});
-   }
-
-   if(user) {
+   }else if (user) {
 
     let data = req.body;
 
@@ -92,6 +95,7 @@ router.put('/', function(req, res){
 
 });
 
+  //Delete
 router.delete('/:userId', function(req,res){
 
   var userId = req.params.userId;
