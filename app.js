@@ -74,6 +74,49 @@ passport.deserializeUser(function(user, done){
   done(null, user);
 });
 
+app.use(function(req,res,next){
+  res.locals.session = req.session;
+
+  res.locals.showLogin = true;
+  if(req.session.passport){
+    if(req.session.passport.user){
+      res.locals.showLogin = false;
+    }
+  }
+  next();
+});
+
+//Session based access control
+app.use(function(req, res, next){
+  //return next();
+
+  var whitelist = [
+    '/',
+    '/auth'
+  ];
+
+  if(whitelist.indexOf(req.url) !== -1){
+    return next();
+  }
+
+  var subs = [
+    '/public/',
+    '/api/auth/'
+  ];
+
+   for(var sub of subs){
+     if(req.url.substring(0,sub.length)===sub){
+       return next();
+     }
+   }
+
+   if(req.isAuthenticated()){
+     return next();
+   }
+
+   return res.redirect('/auth#login');
+});
+
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/api/auth', apiAuthRouter);
