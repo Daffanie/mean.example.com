@@ -105,7 +105,7 @@ app.use(function(req, res, next){
   ];
 
    for(var sub of subs){
-     if(req.url.substring(0,sub.length)===sub){
+     if(req.url.substring(0, sub.length)===sub){
        return next();
      }
    }
