@@ -108,6 +108,8 @@ var usersApp = (function() {
     `;
 
     app.innerHTML=form;
+
+    processRequest('createUser', '/api/users', 'POST');
   }
 
   function viewUser(id){
@@ -204,14 +206,88 @@ var usersApp = (function() {
               </div>
             </form>
           </div>
-        </div>
+          </div>
+          <div>
+            <a href="#delete-${data.user._id}" class="text-danger">Delete</a>
+          </div>
       `;
 
       app.innerHTML=form;
+
+      processRequest('editUser', '/api/users', 'PUT');
+
     }
   }
 
-  function postRequest(formId, url){
+  function deleteView(id){
+
+    let uri = `${window.location.origin}/api/users/${id}`;
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', uri);
+
+    xhr.setRequestHeader(
+      'Content-Type',
+      'application/json; charset=UTF-8'
+    );
+
+    xhr.send();
+
+    xhr.onload = function(){
+      let app = document.getElementById('app');
+      let data = JSON.parse(xhr.response);
+      let card = '';
+
+      card = `<div class="card bg-transparent border-danger text-danger bg-danger">
+        <div class="card-header bg-transparent border-danger">
+          <h2 class="h3 text-center">You are About to Delete a User</h2>
+        </div>
+        <div class="card-body text-center">
+          <div>
+            Are you sure you want to delete
+            <strong>${data.user.first_name} ${data.user.last_name}</strong>
+          </div>
+
+          <div>Username: <strong>${data.user.username}</strong></div>
+          <div>Email: <strong>${data.user.email}</strong></div>
+
+          <div class="text-center">
+            <br>
+            <a onclick="usersApp.deleteUser('${data.user._id}');" class="btn btn-lg btn-danger text-white">
+            Yes delete ${data.user.username}
+            </a>
+          </div>
+        </div>`;
+
+      app.innerHTML = card;
+    }
+  }
+
+  function deleteUser(id){
+
+    let uri = `${window.location.origin}/api/users/${id}`;
+    let xhr = new XMLHttpRequest();
+    xhr.open('DELETE', uri);
+
+    xhr.setRequestHeader(
+      'Content-Type',
+      'application/json; charset=UTF-8'
+    );
+
+    xhr.send();
+
+    xhr.onload = function(){
+      let data = JSON.parse(xhr.response);
+      if(data.success === true){
+        window.location.hash = '#';
+      }else{
+        alert('Unknown error, the user could not be deleted');
+      }
+
+    }
+
+  }
+
+  function processRequest(formId, url, method){
     let form = document.getElementById(formId);
     form.addEventListener('submit', function(e){
       e.preventDefault();
@@ -219,7 +295,7 @@ var usersApp = (function() {
       let formData = new FormData(form);
       let uri = `${window.location.origin}${url}`;
       let xhr = new XMLHttpRequest();
-      xhr.open('POST', uri);
+      xhr.open(method, uri);
 
       xhr.setRequestHeader(
         'Content-Type',
@@ -244,6 +320,11 @@ var usersApp = (function() {
   }
 
   return {
+
+    deleteUser: function(id){
+      deleteUser(id);
+    },
+
     load: function(){
       let hash = window.location.hash;
       let hashArray = hash.split('-');
@@ -251,7 +332,6 @@ var usersApp = (function() {
       switch(hashArray[0]){
         case '#create':
           createUser();
-          postRequest('createUser', '/api/users');
           break;
 
         case '#view':
@@ -263,7 +343,7 @@ var usersApp = (function() {
           break;
 
         case '#delete':
-          console.log('DELETE');
+          deleteView(hashArray[1]);
           break;
 
         default:
