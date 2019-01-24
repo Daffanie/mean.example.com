@@ -33,12 +33,13 @@ var usersApp = (function() {
       }
 
       //Create a users panel, add a table to the panel, inject the rows into the
-      //table
+      //table Notes List of users table with new user button
       table = `<div class="card">
         <div class="card-header clearfix">
           <h2 class="h3 float-left">Users</h2>
           <div class="float-right">
             <a href="#create" class="btn btn-primary">New User</a>
+            <a href="#create" class="btn btn-primary">Articles</a>
           </div>
         </div>
         <div class="table-responsive">
@@ -59,7 +60,7 @@ var usersApp = (function() {
       app.innerHTML = table;
     }
   }
-
+    //Note create a new user form with button for submit to list of users
   function createUser(){
     var app = document.getElementById('app');
 
@@ -111,7 +112,7 @@ var usersApp = (function() {
 
     processRequest('createUser', '/api/users', 'POST');
   }
-
+    //Note User Mgmt file with list of name, username, email and new user button
   function viewUser(id){
 
     let uri = `${window.location.origin}/api/users/${id}`;
