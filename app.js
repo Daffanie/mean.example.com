@@ -20,7 +20,11 @@ var apiUsersRouter = require('./routes/api/users');
 var app = express();
 
 //Call the config file
-var config = require('./config.dev');
+if(process.env.NODE_ENV==='production'){
+  var config = require('../config.prod');
+}else{
+  var config = require('./config.dev');
+}
 
 //Connect to MongoDB
 mongoose.connect(config.mongodb, { useNewUrlParser: true });
