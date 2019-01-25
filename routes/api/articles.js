@@ -2,17 +2,17 @@ var express = require('express');
 var router = express.Router();
 
    //Request that returns all user record
-var Users = require('../../models/users');
+var Articles = require('../../models/articles');
 
 router.get('/', function(req, res, next) {
 
-  Users.find({},function(err, users){
+  Users.find({},function(err, articles){
 
     if(err){
      return res.json({'success':false, 'error': err});
    }
 
-    return res.json({'success':true, 'users': users});
+    return res.json({'success':true, 'users': articles});
   });
 
 });
@@ -21,34 +21,34 @@ router.get('/', function(req, res, next) {
   res.json({success: true});
 });
   //
-router.get('/:userId', function(req,res){
+router.get('/:articleId', function(req,res){
 
   //Request that returns one user record
 
   var userId = req.params.userId;
-   Users.findOne({'_id':userId}, function(err, user){
+   Users.findOne({'_slugid':userId}, function(err, articles){
      if(err){
       return res.json({'success':false, 'error': err});
     }
-     return res.json({'success':true, 'user': user});
+     return res.json({'success':true, 'article': article});
    });
 
  });
 
     //Post - Notes new user info form users.app.js
  router.post('/', function(req, res) {
-  Users.create(new Users({
+  Articles.create(new Articles({
     username: req.body.username,
     email: req.body.email,
     first_name: req.body.first_name,
     last_name: req.body.last_name
-  }), function(err, user){
+  }), function(err, article){
 
     if(err){
       return res.json({success: false, user: req.body, error: err});
     }
 
-    return res.json({success: true, user: user});
+    return res.json({success: true, user: article});
 
   });
 
@@ -57,16 +57,16 @@ router.get('/:userId', function(req,res){
   //PUT
 router.put('/', function(req, res){
 
-  Users.findOne({'_id': req.body._id}, function(err, user){
+  Articles.findOne({'_slugid': req.body._slugid}, function(err, article){
 
    if(err) {
      return res.json({success: false, error: err});
-   }else if (user) {
+   }else if (article) {
 
     let data = req.body;
 
-    if(data.username){
-      user.username = data.username;
+    if(data.articlename){
+      article.articlename = data.articlename;
     }
 
     if(data.email){
@@ -81,11 +81,11 @@ router.put('/', function(req, res){
     user.last_name = data.last_name;
     }
 
-    user.save(function(err){
+    article.save(function(err){
       if(err){
         return res.json({success: false, error: err});
       }else{
-        return res.json({success: true, user:user});
+        return res.json({success: true, user:article});
       }
     });
 
@@ -96,11 +96,11 @@ router.put('/', function(req, res){
 });
 
   //Delete
-router.delete('/:userId', function(req,res){
+router.delete('/:articleId', function(req,res){
 
-  var userId = req.params.userId;
+  var articleId = req.params.articleId;
 
-  Users.remove({'_id':userId}, function(err,removed){
+  Articles.remove({'_id':articleId}, function(err,removed){
 
     if(err){
       return res.json({success: false, error: err});

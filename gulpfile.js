@@ -14,8 +14,7 @@ gulp.task('default', ['watch']);
 gulp.task('build-js', [
   'build-main-js',
   'build-auth-js',
-  'build-users-js',
-  'build-articles-js'
+  'build-users-js'
 ]);
 
 //Compile all CSS tasks
@@ -37,26 +36,14 @@ gulp.task('build-main-css', function(){
 
 gulp.task('build-main-js', function() {
 
-  var authApp = gulp.src([
+  var mainApp = gulp.src([
     'src/js/main.js',
   ])
   .pipe(concat('main.min.js'))
   .pipe(uglify())
   .pipe(gulp.dest('public/dist/js'));
 
-  return merge(authApp);
-});
-
-gulp.task('build-auth-js', function() {
-
-  var authApp = gulp.src([
-    'src/js/auth.app.js',
-  ])
-  .pipe(concat('auth.app.min.js'))
-  .pipe(uglify())
-  .pipe(gulp.dest('public/dist/js'));
-
-  return merge(authApp);
+  return merge(mainApp);
 });
 
 gulp.task('build-users-js', function() {
@@ -71,16 +58,16 @@ gulp.task('build-users-js', function() {
   return merge(userApp);
 });
 
-gulp.task('build-articles-js', function() {
+gulp.task('build-auth-js', function() {
 
-  var articleApp = gulp.src([
-    'src/js/articles.app.js',
+  var authApp = gulp.src([
+    'src/js/auth.app.js',
   ])
-  .pipe(concat('users.app.min.js'))
+  .pipe(concat('auth.app.min.js'))
   .pipe(uglify())
   .pipe(gulp.dest('public/dist/js'));
 
-  return merge(articleApp);
+  return merge(authApp);
 });
 
 //Recompile SCSS/JS on save
