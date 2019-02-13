@@ -17,9 +17,9 @@ router.get('/', function(req, res, next) {
 
 });
 
-router.get('/', function(req, res, next) {
-  res.json({success: true});
-});
+//router.get('/', function(req, res, next) {
+  //res.json({success: true});
+//});
   //
 router.get('/:userId', function(req,res){
 
@@ -30,6 +30,7 @@ router.get('/:userId', function(req,res){
      if(err){
       return res.json({'success':false, 'error': err});
     }
+
      return res.json({'success':true, 'user': user});
    });
 
@@ -37,6 +38,7 @@ router.get('/:userId', function(req,res){
 
     //Post - Notes new user info form users.app.js
  router.post('/', function(req, res) {
+
   Users.create(new Users({
     username: req.body.username,
     email: req.body.email,
@@ -61,7 +63,9 @@ router.put('/', function(req, res){
 
    if(err) {
      return res.json({success: false, error: err});
-   }else if (user) {
+   }
+
+   if (user) {
 
     let data = req.body;
 
@@ -70,15 +74,15 @@ router.put('/', function(req, res){
     }
 
     if(data.email){
-    user.email = data.email;
+      user.email = data.email;
     }
 
     if(data.first_name){
-    user.first_name = data.first_name;
+      user.first_name = data.first_name;
     }
 
     if(data.last_name){
-    user.last_name = data.last_name;
+      user.last_name = data.last_name;
     }
 
     user.save(function(err){

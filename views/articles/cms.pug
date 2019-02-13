@@ -2,8 +2,13 @@ extends ../layout
 
 block content
 
-  h1 = title //Content Management System
+  h1 = Content Management System
 
+   div
+    a.button(href='#articles' onclick='viewIndex()') All Articles
+    |&nbsp;&nbsp;
+    a.button(href='#createArticle' onclick='createArticle()') Create
+  br
+  br
   div#app
-
-  script(src='/dist/js/users.app.min.js')
+  script(src='/javascripts/articles-app.js')

@@ -1,16 +1,16 @@
-function createUser(){
+function createArticles(){
   var app = document.getElementById('app');
 
   var form =  `
       <div class="card">
         <div class="card-header clearfix">
-          <h2 class="h3 float-left">Create a New User</h2>
+          <h2 class="h3 float-left">Create a New Article</h2>
           <div class="float-right">
             <a href="#" class="btn btn-primary">Cancel</a>
           </div>
         </div>
         <div class="card-body">
-          <form id="registrationForm" class="card-body">
+          <form id="body" class="card-body">
             <div id="formMsg" class="alert alert-danger text-center">Your form has errors</div>
 
             <div class="row">

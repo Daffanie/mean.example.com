@@ -1,101 +1,114 @@
 var express = require('express');
 var router = express.Router();
-
-   //Request that returns all user record
+//var bodyParser = require('body-parser');
 var Articles = require('../../models/articles');
 
-router.get('/', function(req, res, next) {
+/* GET articles listing. */
+router.get('/', function(req, res, next){
 
-  Users.find({},function(err, articles){
+  Articles.find({},function(err, articles){
 
     if(err){
-     return res.json({'success':false, 'error': err});
-   }
+      return res.json({'success':false, 'error': err});
+    }
 
-    return res.json({'success':true, 'users': articles});
+    return res.json({'success':true, 'articles': articles});
   });
 
 });
 
-router.get('/', function(req, res, next) {
-  res.json({success: true});
-});
-  //
-router.get('/:articleId', function(req,res){
+/* GET a single article. */
 
-  //Request that returns one user record
+router.get('/:slug', function(req, res){
 
-  var userId = req.params.userId;
-   Users.findOne({'_slugid':userId}, function(err, articles){
-     if(err){
+  var slug = req.params.slug;
+
+  Articles.findOne({'slug':slug}, function(err, article){
+
+    if(err){
       return res.json({'success':false, 'error': err});
     }
-     return res.json({'success':true, 'article': article});
-   });
+    return res.json({'success':true, 'article': article});
 
- });
+  });
 
-    //Post - Notes new user info form users.app.js
- router.post('/', function(req, res) {
+});
+
+/* Create a article*/
+
+router.post('/', function(req, res) {
+
+  //On create we will only save a title. Model lifecycle hooks and the update
+  //method will be used for completing the article
   Articles.create(new Articles({
     username: req.body.username,
-    email: req.body.email,
-    first_name: req.body.first_name,
-    last_name: req.body.last_name
+    title: req.body.title,
+    description: req.body.description
   }), function(err, article){
 
     if(err){
-      return res.json({success: false, user: req.body, error: err});
+      return res.json({success: false, article: req.body, error: err});
     }
-
-    return res.json({success: true, user: article});
-
+    return res.json({success: true, article: article});
   });
 
 });
 
-  //PUT
+/* Update a article */
 router.put('/', function(req, res){
 
-  Articles.findOne({'_slugid': req.body._slugid}, function(err, article){
+  Articles.findOne({'_id': req.body._id}, function(err, article){
 
-   if(err) {
-     return res.json({success: false, error: err});
-   }else if (article) {
-
-    let data = req.body;
-
-    if(data.articlename){
-      article.articlename = data.articlename;
+    // If article._id cannot be found throw an error
+    if(err) {
+      return res.json({success: false, error: err});
     }
+    // if article._id is found update the record
+    if(article) {
+      //user submitted data
+      let data = req.body;
+      //how many fields did the user ask to update
+      let size = Object.keys(data).length;
 
-    if(data.email){
-    user.email = data.email;
-    }
-
-    if(data.first_name){
-    user.first_name = data.first_name;
-    }
-
-    if(data.last_name){
-    user.last_name = data.last_name;
-    }
-
-    article.save(function(err){
-      if(err){
-        return res.json({success: false, error: err});
-      }else{
-        return res.json({success: true, user:article});
+      //start a counter
+      let i = 0;
+      //For the sake of readability, Create a save function, call this after
+      //processing all input
+      function save(article){
+        article.save(function(err){
+          if(err){
+            return res.json({success: false, error: err});
+          }else{
+            return res.json({success: true, article:article});
+          }
+        });
       }
-    });
 
-   }
+      /* Process a single field */
 
+      function processItem(data, key, i){
+
+        //If the item is not a function, add it to the data object
+        if (typeof data[key] !== 'function') {
+
+          article[key] = data[key];
+
+          //Once the last item has been patch in, execute a save
+          if( (size -1) === i) {
+            save(article);
+          }
+        }
+      }
+      //use  a loop to patch in changes from the user
+      for (var key in data){
+        processItem(data, key, i++);
+      }
+    }
   });
 
 });
 
-  //Delete
+//Delete a single article
 router.delete('/:articleId', function(req,res){
 
   var articleId = req.params.articleId;
