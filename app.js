@@ -155,10 +155,10 @@ app.use(function(req,res,next){
 app.use('/', indexRouter);
 app.use('/api/auth', apiAuthRouter);
 app.use('/api/users', apiUsersRouter);
-app.use('/api/articles', apiArticlesRouter)
+//app.use('/api/articles', apiArticlesRouter)
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
-app.use('/articles', articlesRouter);
+//app.use('/articles', articlesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

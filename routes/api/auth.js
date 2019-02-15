@@ -53,6 +53,6 @@ router.delete('/logout', function(req, res){
   req.logout();
     return res.json({success: 'true'});
 
-})
+});
 
 module.exports = router;
