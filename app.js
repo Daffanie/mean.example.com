@@ -97,7 +97,7 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
   if ('OPTIONS' == req.method) {
-    res.send(200);
+    res.sendStatus(200);
   } else {
     next();
   }
@@ -106,7 +106,7 @@ app.use(function(req, res, next) {
 //Session based access control
 app.use(function(req,res,next){
   //Uncomment the following line to allow access to everything.
-  return next();
+  //return next();
 
   //Allow any endpoint that is an exact match. The server does not
   //have access to the hash so /auth and /auth#xxx would bot be considered
@@ -155,10 +155,10 @@ app.use(function(req,res,next){
 app.use('/', indexRouter);
 app.use('/api/auth', apiAuthRouter);
 app.use('/api/users', apiUsersRouter);
-//app.use('/api/articles', apiArticlesRouter)
+app.use('/api/articles', apiArticlesRouter)
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
-//app.use('/articles', articlesRouter);
+app.use('/articles', articlesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

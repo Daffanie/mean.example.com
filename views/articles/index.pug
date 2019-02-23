@@ -3,9 +3,12 @@ extends ../layout
 block content
   h1 Articles
 
-  each article in articles
+  div
+    a.button(href='#articles' onclick='viewIndex()') All Articles
+    |&nbsp;&nbsp;
+    a.button(href='#createArticle' onclick='createArticle()') Create
+  br
+  br
+  div#app
 
-    div.article
-      a(href='/articles/' +   article.slug)
-        h2= article.title
-        p= article.description
+  script(src='/dist/js/article.app.min.js')

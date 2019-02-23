@@ -1,49 +1,46 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var slug = require('slug');
-var passportLocalMongoose = require('passport-local-mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
+var slug = require('slug');
 
 //Create a schema
 var Articles = new Schema({
   title: {
     type: String,
-    required: [true, 'A title is required'],
+    required: [true, 'Please enter a title'],
+    unique: [true, 'Title is already in use']
   },
   slug: {
     type: String,
-    required: [true, 'A slug is required'],
-    unique: true
+    required: [true, 'Please enter a slug'],
+    unique: [true, 'Slug is already in use']
   },
+  keywords: String,
   description: String,
-  keyword: String,
   body: String,
-  published: {
-    type: Date,
-  },
-
-  //Create and modified dates
   created: {
     type: Date,
     default: Date.now
   },
   modified: {
+    type: Date,
+    default: Date.now
+  },
+  published: {
     type: Date
-
+    //required: [true, 'Please enter a pub date'],
   }
 });
-  //Auto set the slug prior to validation
+//Auto set the slug prior to validation
 Articles.pre('validate', function(next){
   this.slug = slug(this.title).toLowerCase();
   next();
 });
-// Auto set the modified date prior to save
+//Auto set the modified date prior to save
 Articles.pre('save', function(next){
   this.modified = new Date().toISOString();
   next();
 });
-  
-//Add unique validation properties to the model
-Articles.plugin(uniqueValidator);
 
+Articles.plugin(uniqueValidator);
 module.exports  = mongoose.model('Articles', Articles);
